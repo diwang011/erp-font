@@ -54,3 +54,5 @@ export const cancelOrder = params => { return axios.post(`${base}/order/cancelOr
 export const getOrderDetail = params => { return axios.post(`${base}/order/getItemDetail`, params).then(res => res.data); };
 
 export const uploadItem = params => { return `${base}/feed/uploadItem?token=`; };
+
+export const requestRegister = params => { return axios.post(`${base}/register`, params).then(res => res.data); };

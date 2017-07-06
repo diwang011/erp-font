@@ -14,6 +14,7 @@
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner">{{sysUserName}} <img src="/walmart/static/img/top_name.png" /> </span>
 					<el-dropdown-menu slot="dropdown">
+						<el-dropdown-item @click.native="settings">User Settings</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">logout</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -102,6 +103,18 @@
 			},
 			handleselect: function (a, b) {
 			},
+            //设置
+            settings: function () {
+                this.$confirm('Are you sure to exit?', 'title', {
+                }).then(() => {
+                    sessionStorage.removeItem('user');
+                    this.$router.push('/login');
+                }).catch(() => {
+
+                });
+
+
+            },
 			//退出登录
 			logout: function () {
 				var _this = this;
