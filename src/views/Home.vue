@@ -14,7 +14,7 @@
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner">{{sysUserName}} <img src="/walmart/static/img/top_name.png" /> </span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item @click.native="settings">User Settings</el-dropdown-item>
+						<!--<el-dropdown-item @click.native="settings">User Settings</el-dropdown-item>-->
 						<el-dropdown-item divided @click.native="logout">logout</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -38,7 +38,7 @@
 					<li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item">
 						<template v-if="!item.leaf">
 							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="item.iconCls"></i></div>
-							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"> 
+							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
 								<li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
 							</ul>
 						</template>
@@ -104,17 +104,7 @@
 			handleselect: function (a, b) {
 			},
             //设置
-            settings: function () {
-                this.$confirm('Are you sure to exit?', 'title', {
-                }).then(() => {
-                    sessionStorage.removeItem('user');
-                    this.$router.push('/login');
-                }).catch(() => {
 
-                });
-
-
-            },
 			//退出登录
 			logout: function () {
 				var _this = this;
@@ -152,7 +142,7 @@
 
 <style scoped lang="scss">
 	@import '~scss_vars';
-	
+
 	.container {
 		position: absolute;
 		top: 0px;

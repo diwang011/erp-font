@@ -72,7 +72,7 @@
             </el-table-column>
             <el-table-column prop="feedDate" label="Feed Date" width="180" :formatter="formatDate" sortable>
             </el-table-column>
-            <el-table-column label="Operation" width="130">
+            <el-table-column label="Operation" width="130" fixed="right">
                 <template scope="scope">
                     <el-button type="info" size="small" @click="handleDetail(scope.$index, scope.row)"
                                :loading="detailLoading">Detail
@@ -89,21 +89,21 @@
         </el-col>
 
         <!--Feed详情界面-->
-        <el-dialog title="Detail" v-model="detailsVisible" :close-on-click-modal="false">
+        <el-dialog title="Detail" v-model="detailsVisible" :close-on-click-modal="false" size="full">
             <el-table :data="errors" style="width: 100%;">
                 <el-table-column prop="type" label="error type" width="180" >
                 </el-table-column>
-                <el-table-column prop="code" label="error code" width="200" >
+                <el-table-column prop="code" label="error code" width="230" >
                 </el-table-column>
                 <el-table-column prop="description" label="description" width="400" >
                 </el-table-column>
             </el-table>
             <el-table :data="details" style="width: 100%;">
-                <el-table-column prop="sku" label="sku" width="100" >
+                <el-table-column prop="sku" label="sku" width="200" >
                 </el-table-column>
-                <el-table-column prop="ingestionStatus" label="ingestionStatus" width="150" >
+                <el-table-column prop="ingestionStatus" label="ingestionStatus" width="180" >
                 </el-table-column>
-                <el-table-column prop="ingestionErrors" label="ingestionErrors" width="500" >
+                <el-table-column prop="ingestionErrors" label="ingestionErrors" width="700" >
                 </el-table-column>
             </el-table>
         </el-dialog>
@@ -230,7 +230,7 @@
                 alert(file);
             },
             handleDownload: function () {
-                window.open("./static/walmart.xlsx");
+                window.open("./static/category.rar","_blank");
             },
         },
         mounted() {

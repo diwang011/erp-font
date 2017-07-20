@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import ItemList from './views/Item/ItemList.vue'
 import FeedList from './views/Item/FeedList.vue'
 import OrderList from './views/Order/OrderList.vue'
+import OrderDetail from './views/Order/OrderDetail.vue'
 let routes = [
     {
         path: '/login',
@@ -34,6 +35,7 @@ let routes = [
         iconCls: 'fa fa-id-card-o',
         children: [
             {path: '/order', component: OrderList, name: 'Order List'},
+            {path: '/orderDetail', component: OrderDetail, name: 'Order Detail', hidden: true},
         ]
     },
     {

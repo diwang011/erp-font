@@ -20,7 +20,7 @@
         </el-col>
 
         <!--列表-->
-        <el-table :data="feeds" highlight-current-row v-loading="listLoading" style="width: 100%;">
+        <el-table :data="orders" highlight-current-row v-loading="listLoading" style="width: 100%;">
             <el-table-column type="index" width="80">
             </el-table-column>
             <el-table-column prop="purchaseOrderId" label="Purchase Order" width="190">
@@ -29,11 +29,9 @@
             </el-table-column>
             <el-table-column prop="orderDate" label="Order Date" width="170" :formatter="formatDate" sortable>
             </el-table-column>
-            <!--<el-table-column prop="orderStatus" label="Order Status" width="150" sortable>
-            </el-table-column>-->
             <el-table-column prop="customerEmailId" label="Customer Email" width="270">
             </el-table-column>
-            <el-table-column label="Operation" width="338">
+            <el-table-column label="Operation" width="338" fixed="right">
                 <template scope="scope">
                     <el-button type="info" size="small" @click="handleDetail(scope.$index, scope.row)"
                                :loading="detailLoading">Detail
@@ -50,7 +48,6 @@
                 </template>
             </el-table-column>
         </el-table>
-
         <!--工具条-->
         <el-col :span="24" class="toolbar">
             <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20"
@@ -59,10 +56,20 @@
         </el-col>
 
         <!--上传tracking界面-->
-        <el-dialog title="Shipping" v-model="shippingFormVisible" :close-on-click-modal="false">
+        <el-dialog title="Shipping" v-model="shippingFormVisible" :close-on-click-modal="false" >
             <el-form :model="shippingForm" label-width="120px" :rules="shippingFormRules" ref="shippingForm">
+                <el-form-item label="purchaseOrderId" prop="purchaseOrderId">
+                    <el-input v-model="shippingForm.purchaseOrderId" auto-complete="off" :disabled="true"></el-input>
+                </el-form-item>
                 <el-form-item label="carrierName" prop="carrierName">
-                    <el-input v-model="shippingForm.carrierName" auto-complete="off"></el-input>
+                    <!--<el-input v-model="shippingForm.carrierName" auto-complete="off"></el-input>-->
+                    <el-select v-model="shippingForm.carrierName">
+                        <el-option label="UPS" value="UPS"></el-option>
+                        <el-option label="USPS" value="USPS"></el-option>
+                        <el-option label="FedEx" value="FedEx"></el-option>
+                        <el-option label="Airborne" value="Airborne"></el-option>
+                        <el-option label="OnTrac" value="OnTrac"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="trackingNumber" prop="trackingNumber">
                     <el-input v-model="shippingForm.trackingNumber" auto-complete="off"></el-input>
@@ -73,92 +80,6 @@
                 <el-button @click.native="shippingFormVisible = false">Cancel</el-button>
                 <el-button type="primary" @click.native="shippingSubmit" :loading="shippingLoading">Submit</el-button>
             </div>
-        </el-dialog>
-
-        <!--Orders详情界面-->
-        <el-dialog title="Order Info" v-model="detailsVisible" :close-on-click-modal="false"
-                   style="width: 140%;margin-left:-330px;">
-            <el-tag style="font-size:16px;"type="gray">Shipping Info</el-tag>
-            <el-form :model="editForm" label-width="180px" ref="editForm">
-                <el-form-item label="name" prop="name">
-                    <el-input v-model="editForm.name" :disabled="true" style="width:30%"/>
-                </el-form-item>
-                <el-form-item label="phone" prop="phone" style="margin-left:350px;margin-top:-58px;">
-                    <el-input v-model="editForm.phone" :disabled="true" style="width:70%"/>
-                </el-form-item>
-
-                <el-form-item label="country" prop="country">
-                    <el-input v-model="editForm.country" :disabled="true" style="width:30%"/>
-                </el-form-item>
-                <el-form-item label="state" prop="state" style="margin-left:350px;margin-top:-58px;">
-                    <el-input v-model="editForm.state" :disabled="true" style="width:70%"/>
-                </el-form-item>
-
-                <el-form-item label="city" prop="city">
-                    <el-input v-model="editForm.city" :disabled="true" style="width:30%"/>
-                </el-form-item>
-                <el-form-item label="postalCode" prop="postalCode" style="margin-left:350px;margin-top:-58px;">
-                    <el-input v-model="editForm.postalCode" :disabled="true" style="width:70%"/>
-                </el-form-item>
-
-                <el-form-item label="address1" prop="address1">
-                    <el-input v-model="editForm.address1" :disabled="true" style="width:30%"/>
-                </el-form-item>
-                <el-form-item label="address2" prop="address2" style="margin-left:350px;margin-top:-58px;">
-                    <el-input v-model="editForm.address2" :disabled="true" style="width:70%"/>
-                </el-form-item>
-            </el-form>
-
-            <el-tag style="font-size:16px;" type="gray">Item Info</el-tag>
-            <el-table :data="items" style="width: 100%;">
-                <el-table-column prop="lineNumber" label="lineNumber" width="115"/>
-                <el-table-column prop="sku" label="sku" width="100"/>
-                <el-table-column prop="productName" label="productName" width="150" :show-overflow-tooltip="true"/>
-                <!--<el-table-column prop="price_currency" label="price_currency" width="180" sortable />-->
-                <el-table-column prop="inv_amount_unit" label="quantity" width="100"/>
-                <el-table-column prop="status" label="status" width="80"/>
-                <el-table-column prop="trackingInfo" label="trackingInfo" width="120"/>
-                <el-input prop="purchaseOrderId" label="purchaseOrderId" width="100" type="hidden"/>
-                <el-table-column label="Option" width="410">
-                    <template scope="scope">
-                        <el-button type="primary" size="mini" @click="handleCancelAItem(scope.$index, scope.row)"
-                                   :loading="cancelAItemLoading">Cancel a Item
-                        </el-button>
-                        <el-button type="primary" size="mini" @click="handleRefundAItem(scope.$index, scope.row)"
-                                   :loading="refundAItemLoading">Refund a Item
-                        </el-button>
-                        <el-button type="primary" size="mini" @click="handleChargeEdit(scope.$index, scope.row)"
-                        >Charges Info
-                        </el-button>
-                        <el-button type="primary" size="mini" @click="handleRefundEdit(scope.$index, scope.row)"
-                        >Refunds Info
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-dialog>
-
-        <el-dialog title="Charges Info" v-model="chargesDetailsVisible" :close-on-click-modal="false">
-            <el-table :data="charges" style="width: 100%;">
-                <el-table-column type="index" width="60"/>
-                <el-table-column prop="chargeName" label="chargeName" width="150"/>
-                <el-table-column prop="chargeAmount" label="chargeAmount" width="180"/>
-                <el-table-column prop="taxName" label="taxName" width="185"/>
-                <el-table-column prop="taxAmount" label="taxAmount" width="180"/>
-            </el-table>
-
-        </el-dialog>
-
-        <el-dialog title="Refunds Info" v-model="refundDetailsVisible" :close-on-click-modal="false">
-            <el-table :data="refund" style="width: 100%;">
-                <el-table-column type="index" width="60"/>
-                <el-table-column prop="refundName" label="refundName" width="150"/>
-                <el-table-column prop="refundAmount" label="refundAmount" width="150"/>
-                <el-table-column prop="refundReason" label="refundReason" width="200"/>
-                <el-table-column prop="taxName" label="taxName" width="180"/>
-                <el-table-column prop="taxAmount" label="taxAmount" width="150"/>
-            </el-table>
-
         </el-dialog>
 
     </section>
@@ -181,11 +102,8 @@
                 filters: {
                     purchaseOrderId: ''
                 },
-                items: [],
-                charges: [],
-                refund: [],
+                orders: [],
                 errors: [],
-                feeds: [],
                 total: 0,
                 page: 1,
                 listLoading: false,
@@ -193,9 +111,6 @@
                 detailLoading: false,
 
                 detailsVisible: false,
-
-                chargesDetailsVisible: false,
-                refundDetailsVisible: false,
 
                 shippingFormVisible: false,
                 shippingLoading: false,
@@ -216,9 +131,6 @@
                 editForm: {},
                 cancelLoading: false,
                 refundLoading: false,
-
-                cancelAItemLoading: false,
-                refundAItemLoading: false,
             }
         },
         methods: {
@@ -248,7 +160,7 @@
                         });
                     } else {
                         this.total = res.total;
-                        this.feeds = res.data;
+                        this.orders = res.data;
                     }
                     this.listLoading = false;
                 });
@@ -272,43 +184,18 @@
                 });
             },
 
+            //查看详情
             handleDetail: function (index, row) {
-                let user = JSON.parse(sessionStorage.getItem('user'));
-                let paras = {
-                    data: row.purchaseOrderId,
-                    token: user.token
-                };
-                this.detailLoading = true;
-                getOrderDetail(paras).then((res) => {
-                    this.detailLoading = false;
-                    if (res.error != null) {
-                        this.$message({
-                            message: res.error,
-                            type: 'warning'
-                        });
-                    } else {
-                        this.detailsVisible = true;
-                        this.editForm = Object.assign({}, res.data.shippingInfo);
-                        this.items = res.data.items;
-                    }
+                this.$router.push({
+                    path: '/orderDetail',
+                    query: {id: row.purchaseOrderId},
                 });
             },
-
-            handleChargeEdit: function (index, row) {
-                this.chargesDetailsVisible = true;
-                this.charges = row.charges;
-//        this.editForm = Object.assign({}, row.charges);
-            },
-
-            handleRefundEdit: function (index, row) {
-                this.refundDetailsVisible = true;
-                this.refund = row.refunds;
-//        this.editForm = Object.assign({}, row.refunds);
-            },
-
-            //上传tracking
+            //发货
             handleShipping: function (index, row) {
                 this.shippingFormVisible = true;
+                row.carrierName='';
+                row.trackingNumber=''
                 this.shippingForm = Object.assign({}, row);
             },
             shippingSubmit: function () {
@@ -375,54 +262,6 @@
                         util.handleData(op, res, this);
                         this.refundLoading = false;
                         this.getOrderList();
-                    });
-                }).catch(() => {
-                });
-            },
-
-
-            //取消一个ITEM
-            handleCancelAItem: function (index, row) {
-                this.$confirm('Are you sure to Cancel?', 'title', {
-                    type: 'warning'
-                }).then(() => {
-                    this.cancelAItemLoading = true;
-                    let user = JSON.parse(sessionStorage.getItem('user'));
-                    let data = {
-                        purchaseOrderId: row.purchaseOrderId,
-                        lineNumber: row.lineNumber,
-                    };
-                    let para = {
-                        data: data,
-                        token: user.token,
-                    };
-                    cancelOrder(para).then((res) => {
-                        this.cancelAItemLoading = false;
-                        let op = 'Cancel a Item ';
-                        util.handleData(op, res, this);
-                    });
-                }).catch(() => {
-                });
-            },
-            //退款一个ITEM
-            handleRefundAItem: function (index, row) {
-                this.$confirm('Are you sure to ReFund?', 'title', {
-                    type: 'warning'
-                }).then(() => {
-                    this.refundAItemLoading = true;
-                    let user = JSON.parse(sessionStorage.getItem('user'));
-                    let data = {
-                        purchaseOrderId: row.purchaseOrderId,
-                        lineNumber: row.lineNumber,
-                    };
-                    let para = {
-                        data: data,
-                        token: user.token,
-                    };
-                    refundOrder(para).then((res) => {
-                        let op = 'ReFund  a Item ;';
-                        util.handleData(op, res, this);
-                        this.refundAItemLoading = false;
                     });
                 }).catch(() => {
                 });

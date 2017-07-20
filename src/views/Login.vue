@@ -88,7 +88,7 @@
                     password: ''
                 },
                 rules2: {
-                    account: [
+                    username: [
                         {required: true, message: 'Please input Username', trigger: 'blur'},
                     ],
                     password: [
@@ -140,7 +140,7 @@
                                     message: 'Register success',
                                 });
                                 let user = {
-                                    name: this.ruleForm2.account,
+                                    name: this.ruleForm1.username,
                                     token: res.data
                                 };
                                 sessionStorage.setItem('user', JSON.stringify(user));
@@ -176,7 +176,7 @@
                                 });
                             } else {
                                 let user = {
-                                    name: this.ruleForm2.account,
+                                    name: this.ruleForm2.username,
                                     token: res.data
                                 };
                                 sessionStorage.setItem('user', JSON.stringify(user));
